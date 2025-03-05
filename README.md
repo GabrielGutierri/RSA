@@ -1,5 +1,3 @@
-# README - Sistema de Criptografia com RSA e Cifra de César
-
 Este projeto implementa um sistema de comunicação seguro entre um cliente e um servidor utilizando criptografia RSA e a Cifra de César. A comunicação é feita via sockets TCP.
 
 ## Visão Geral
@@ -11,8 +9,8 @@ O sistema possui duas partes principais:
 
 ## Funcionalidades Implementadas
 - **Geração de números primos de 4096 bits** para criação das chaves RSA.
-- **Criação e gerenciamento de chaves RSA** para criptografia e descriptografia segura.
-- **Criptografia e descriptografia utilizando RSA** para garantir comunicação segura.
+- **Criação e gerenciamento de chaves RSA** para criptografia e decriptografia segura.
+- **Criptografia e decriptografia utilizando RSA** para garantir comunicação segura.
 - **Cifra de César** como método alternativo de criptografia.
 - **Comunicação via sockets TCP** entre cliente e servidor.
 
