@@ -2,20 +2,6 @@ import json
 from socket import *
 import random
 
-# Função para criptografar utilizando a cifra de César
-def cifra_de_cesar(texto, deslocamento):
-    resultado = ""
-    for char in texto:
-        novo_char = chr((ord(char) + deslocamento) % 256)
-        resultado += novo_char
-    return resultado
-
-# Função para descriptografar utilizando a cifra de César
-def descriptografar_cifra_de_cesar(texto, deslocamento):
-    return cifra_de_cesar(texto, -deslocamento)
-
-import random
-
 # Lista dos primeiros 1000 primos para filtro rápido de compostos
 SMALL_PRIMES = [
     3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97,
@@ -118,28 +104,34 @@ def escolha_d(e, totiente):
 
 # Gerar chaves públicas e privadas RSA
 def generate_rsa_keys():
-    p = generate_prime_4096_bit()
-    q = generate_prime_4096_bit()
-    while p == q:
-        q = generate_prime_4096_bit()
-    N = p * q
-    totiente = calcular_totiente(p, q)
-    e = escolher_primo(totiente)
-    d = escolha_d(e, totiente)
+    prime1 = generate_prime_4096_bit()
+    prime2 = generate_prime_4096_bit()
+    while prime2 == prime1:
+        prime2 = generate_prime_4096_bit()
+    
+    N = prime1 * prime2
+    totient = (prime1 - 1) * (prime2 - 1)
+
+    # Escolher o número coprimo e calcular o inverso modular
+    e = escolher_primo(totient)
+    d = escolha_d(e, totient)
+
+    # Chaves pública e privada
     public_key = (e, N)
     private_key = (d, N)
+
     return public_key, private_key
 
 # Função para criptografar mensagem usando RSA
 def encrypt(message, public_key):
     e, N = public_key
     message_int = int.from_bytes(message.encode(), 'big')
-    return pow(message_int, e, N)
+    return str(pow(message_int, e, N))
 
 # Função para descriptografar mensagem usando RSA
 def decrypt(ciphertext, private_key):
     d, N = private_key
-    message_int = pow(ciphertext, d, N)
+    message_int = pow(int(ciphertext), d, N)
     return message_int.to_bytes((message_int.bit_length() + 7) // 8, 'big').decode()
 
 # Defina o servidor e a porta
@@ -175,7 +167,7 @@ modifiedSentence = clientSocket.recv(65000)
 text = str(modifiedSentence, "utf-8")
 
 # Descriptografa a mensagem usando a chave privada do cliente
-decrypted_text = decrypt(int(text), private_key)
+decrypted_text = decrypt(str(text), private_key)
 
 # Exibe a resposta do servidor após a descriptografia
 print("Received from server (decrypted):", decrypted_text)

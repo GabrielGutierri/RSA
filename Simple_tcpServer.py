@@ -124,20 +124,15 @@ def generate_rsa_keys():
 
     return public_key, private_key
 
-# Gerar e exibir as chaves
-public_key, private_key = generate_rsa_keys()
-print("Chave pública (e, N):", public_key)
-print("Chave privada (d, N):", private_key)
-
 def encrypt(message, public_key):
     e, N = public_key
     message_int = int.from_bytes(message.encode(), 'big')
-    return pow(message_int, e, N)
+    return str(pow(message_int, e, N))
 
 # Função para decriptografar uma mensagem usando a chave privada
 def decrypt(ciphertext, private_key):
     d, N = private_key
-    message_int = pow(ciphertext, d, N)
+    message_int = pow(int(ciphertext), d, N)
     return message_int.to_bytes((message_int.bit_length() + 7) // 8, 'big').decode()
 
 def cifra_de_cesar(texto, deslocamento):
@@ -177,8 +172,8 @@ sentence = connectionSocket.recv(65000)
 received_message = str(sentence, "utf-8")
 print("Mensagem recebida do cliente (criptografada): ", received_message)
 
-# Descriptografa a mensagem recebida usando a chave privada do servidor
-decrypted_message = decrypt(int(received_message), server_private_key)
+# Decriptografa a mensagem recebida usando a chave privada do servidor
+decrypted_message = decrypt(received_message, server_private_key)
 print("Mensagem DECRIPTOGRAFADA do cliente: ", decrypted_message)
 
 # Realiza o processamento da mensagem, neste caso, convertendo para maiúsculas
